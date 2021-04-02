@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-ReactDOM.render(
-
-    <App />, document.getElementById('root'));
+ReactDOM.render(<App />, document.getElementById('root'));
+// 함수 이름을 <tag />로 쓴다
+// 함수를 'root'로 전달해준다
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
