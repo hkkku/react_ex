@@ -1,86 +1,51 @@
 import React from "react";
-import './App.css';
+import axios from 'axios';
+import Movie from './components/Movie';
 
-import PropTypes from 'prop-types';
-//여러 개의 component를 사용하기 위해 Component는 {} 로 감싼다.
+class App extends React.Component {
 
-function Movie({title, rating, pic}){
-  console.log(typeof rating);
-  return (
-    <div>
-      <h3>My Favorite Movie is {title}</h3>
-      <p>★ : {rating}</p>
-      <img src ={pic} alt = {title} />
-    </div>
-  )
-}
-
-// 1. 함수 형태 2. class 형태로 사용 가능하다 
-// 함수 이름은 대문자로 시작해야함
-// function Header(){
-
-const arr = ['a', 'b', 'c', 'd'];
-arr.map(function(elm){
-  console.log(elm);
-  return 0;
-});
-
-arr.map((elm)=> {
-  console.log(elm);
-  return 0;
-});
-const myMovies = [
-  {
-    id: 1,
-    title : "기생충",
-    rating : 5,
-    image : 'https://upload.wikimedia.org/wikipedia/ko/6/60/%EA%B8%B0%EC%83%9D%EC%B6%A9_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg',
-  },
-  {
-    id: 2,
-    title : "아가씨",
-    rating : 4.2,
-    image : 'https://img.huffingtonpost.com/asset/5d7196bc240000ee177698ab.jpeg?ops=scalefit_630_noupscale',
-  },
-  {
-    id: 3,
-    title : "박쥐",
-    rating : 3.8,
-    image : 'https://upload.wikimedia.org/wikipedia/ko/thumb/e/ed/Thirst.jpg/220px-Thirst.jpg',
-  },
-  {
-    id: 4,
-    title : "윤희에게",
-    rating : 3.5,
-    image : 'https://upload.wikimedia.org/wikipedia/ko/f/f5/%EC%9C%A4%ED%9D%AC%EC%97%90%EA%B2%8C_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg',
+  state = {
+    isLoading : true,
+    movies : [],
   }
-]
 
-function App() {
-  return (
-    // 계속 바뀔 부분
-    <div className="App">
-      <h2>My Movie</h2>
-      {myMovies.map((movies) => (
-        //{} 를 사용하지 않는다.
-        <Movie 
-          title= {movies.title} 
-          rating={movies.rating} 
-          pic ={movies.image}
-          key ={movies.id}
-        />
-      ))}
+  getMovies = async () => {
+    const {
+      data : {
+        data : {movies},
+      },
+    } = await axios.get('https://yts.mx/api/v2/list_movies.json'); 
+    console.log(movies);
+    this.setState({isLoading : false, movies : movies});
+  }
+  componentDidMount(){
+    // setTimeout(function(){
+    //   this.setState({ isLoading : false });
+    // }, 3000); this 바인딩 실패
 
+    // setTimeout(() => {
+    //   this.setState({ isLoading : false });
+    // }, 3000);
 
-    </div>
-  );
+    // axios 들어오는 위치
+    this.getMovies();
+  }
+  render(){
+    // const isLoading = this.state.isLoading;
+    const { isLoading, movies } = this.state;
+    return(
+      // 최상위 태그는 비워도 상관x <></>
+
+      
+     (<div>
+        {/* 상황 연산자 true 일 때 실행 : false 일 때 실행 */}
+        {isLoading ? 'Loading . . .' : movies.map((movie) => {
+          console.log(movie);
+          return <Movie key = {movie.id} title = {movie.title} year = {movie.year} rating = {movie.rating}/>;
+        })}
+      </div>)
+    );
+  }
 }
-
-Movie.propTypes = {
-  title:PropTypes.string.isRequired,
-  pic:PropTypes.string.isRequired,
-  rating:PropTypes.number.isRequired,
-}
-
 export default App;
 // = return 역할 
